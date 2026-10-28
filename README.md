@@ -1,4 +1,4 @@
-# You Are Being Watched
+# Within Frame
 
 Prototype software for an art installation that watches camera sources, selects a stream with detected people or dogs every 10 seconds, and crops the output around tracked subjects.
 
@@ -13,8 +13,8 @@ uv sync
 Run the no-camera smoke check or the windowed prototype:
 
 ```bash
-uv run ybwatch --mock --headless --max-frames 120
-uv run ybwatch --mock --windowed
+uv run wf --mock --headless --max-frames 120
+uv run wf --mock --windowed
 ```
 
 ## Options
@@ -44,33 +44,33 @@ Capture and runtime options:
 | `--scan-max N` | Auto-discover camera indices from `0` through `N - 1`. |
 | `--max-frames N` | Exit after showing `N` frames. |
 | `--mock` | Use a generated source and synthetic detections. |
-| `--log-level LEVEL` | Set logging verbosity (default: `INFO`). `YBWATCH_LOG_LEVEL` also sets the default. |
+| `--log-level LEVEL` | Set logging verbosity (default: `INFO`). `WF_LOG_LEVEL` also sets the default. |
 
 Examples:
 
 ```bash
-uv run ybwatch --segmentation
-uv run ybwatch --do-not-track --show-box
-uv run ybwatch --margin 40 --source 0
-uv run ybwatch --max-fps
-uv run ybwatch --max-resolution
-uv run ybwatch --output-res 1920x1080
-uv run ybwatch image --source photo.jpg
+uv run wf --segmentation
+uv run wf --do-not-track --show-box
+uv run wf --margin 40 --source 0
+uv run wf --max-fps
+uv run wf --max-resolution
+uv run wf --output-res 1920x1080
+uv run wf image --source photo.jpg
 ```
 
-Info logging is enabled by default. Use `--log-level DEBUG` or `YBWATCH_LOG_LEVEL=DEBUG` for per-frame detail.
+Info logging is enabled by default. Use `--log-level DEBUG` or `WF_LOG_LEVEL=DEBUG` for per-frame detail.
 Press `q` in the OpenCV window to exit. Display output is fullscreen by default; use `--windowed` to force a window.
 
 Process one JPG or PNG still image and save a 1920x1080 result as the first available `out-N.jpg`:
 
 ```bash
-uv run ybwatch image --source photo.jpg --margin 40
+uv run wf image --source photo.jpg --margin 40
 ```
 
 Inspect camera availability:
 
 ```bash
-uv run ybwatch doctor
+uv run wf doctor
 ```
 
 The first non-mock detection run downloads `yolo26n.pt` through Ultralytics if it is not already present. Segmentation mode downloads `yolo26n-seg.pt` by default.
@@ -91,7 +91,7 @@ Then confirm Linux can see the device:
 
 ```bash
 ls /dev/video*
-uv run ybwatch doctor
+uv run wf doctor
 ```
 
 If `doctor` shows `/dev/video*` devices owned by `root:video` but `read=False` or `write=False`, add your WSL user to the video group and restart WSL:

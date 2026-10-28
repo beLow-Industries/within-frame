@@ -8,9 +8,9 @@ from unittest.mock import patch
 
 import numpy as np
 
-from youarebeingwatched.config import SourcesConfig
-from youarebeingwatched.sources import SourceManager, SourceSpec, VideoSource, _capture_config_candidates, _open_capture
-from youarebeingwatched.v4l2 import CameraMode
+from within_frame.config import SourcesConfig
+from within_frame.sources import SourceManager, SourceSpec, VideoSource, _capture_config_candidates, _open_capture
+from within_frame.v4l2 import CameraMode
 
 
 class FakeCapture:
@@ -55,14 +55,14 @@ def wait_for(predicate: object, timeout: float = 1.0) -> bool:
 
 class VideoSourceCaptureWorkerTest(unittest.TestCase):
     def test_video_source_uses_file_aware_default_capture_opener(self) -> None:
-        with patch("youarebeingwatched.sources._open_capture", return_value=FakeCapture()) as open_capture:
+        with patch("within_frame.sources._open_capture", return_value=FakeCapture()) as open_capture:
             source = VideoSource(SourceSpec("clip.mp4"), SourcesConfig())
             self.addCleanup(source.release)
 
         open_capture.assert_called_once_with("clip.mp4", SourcesConfig())
 
     def test_open_capture_does_not_force_v4l2_for_video_files(self) -> None:
-        with patch("youarebeingwatched.sources.cv2.VideoCapture", return_value=FakeCapture()) as video_capture:
+        with patch("within_frame.sources.cv2.VideoCapture", return_value=FakeCapture()) as video_capture:
             _open_capture("clip.mp4", SourcesConfig())
 
         video_capture.assert_called_once_with("clip.mp4")
@@ -104,8 +104,8 @@ class VideoSourceCaptureWorkerTest(unittest.TestCase):
                 return captures[min(len([capture for capture in captures if capture.release_count > 0]), len(captures) - 1)]
 
         with (
-            patch("youarebeingwatched.sources.CAMERA_REOPEN_FAILURES", 2),
-            patch("youarebeingwatched.sources.CAMERA_REOPEN_BACKOFF_SECONDS", (0.01,)),
+            patch("within_frame.sources.CAMERA_REOPEN_FAILURES", 2),
+            patch("within_frame.sources.CAMERA_REOPEN_BACKOFF_SECONDS", (0.01,)),
         ):
             source = VideoSource(SourceSpec("0"), SourcesConfig(), capture_factory=factory)
             self.addCleanup(source.release)
@@ -136,8 +136,8 @@ class VideoSourceCaptureWorkerTest(unittest.TestCase):
         ]
         config = SourcesConfig(mode_strategy="max_resolution")
 
-        with patch("youarebeingwatched.sources.v4l2_available", return_value=True), patch(
-            "youarebeingwatched.sources.list_camera_modes", return_value=modes
+        with patch("within_frame.sources.v4l2_available", return_value=True), patch(
+            "within_frame.sources.list_camera_modes", return_value=modes
         ):
             configs = _capture_config_candidates("/dev/video0", config)
 
@@ -159,10 +159,10 @@ class VideoSourceCaptureWorkerTest(unittest.TestCase):
             CameraMode("MJPG", "Motion-JPEG", 640, 480, (30.0,)),
         ]
         with (
-            patch("youarebeingwatched.sources.v4l2_available", return_value=True),
-            patch("youarebeingwatched.sources.list_camera_modes", return_value=modes),
-            patch("youarebeingwatched.sources.CAMERA_REOPEN_FAILURES", 2),
-            patch("youarebeingwatched.sources.CAMERA_REOPEN_BACKOFF_SECONDS", (0.01,)),
+            patch("within_frame.sources.v4l2_available", return_value=True),
+            patch("within_frame.sources.list_camera_modes", return_value=modes),
+            patch("within_frame.sources.CAMERA_REOPEN_FAILURES", 2),
+            patch("within_frame.sources.CAMERA_REOPEN_BACKOFF_SECONDS", (0.01,)),
         ):
             source = VideoSource(SourceSpec("/dev/video0"), SourcesConfig(mode_strategy="max_resolution"), capture_factory=factory)
             self.addCleanup(source.release)

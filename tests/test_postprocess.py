@@ -5,9 +5,9 @@ import unittest
 
 import numpy as np
 
-from youarebeingwatched.config import DisplayConfig
-from youarebeingwatched.postprocess import PostProcessor
-from youarebeingwatched.types import BinaryCropMask, Box, Detection
+from within_frame.config import DisplayConfig
+from within_frame.postprocess import PostProcessor
+from within_frame.types import BinaryCropMask, Box, Detection
 
 
 def detection(x1: int, y1: int, x2: int, y2: int, confidence: float = 0.9) -> Detection:

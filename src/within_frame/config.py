@@ -29,7 +29,7 @@ class TrackingConfig:
 
 @dataclass(frozen=True)
 class DisplayConfig:
-    window_name: str = "you are being watched"
+    window_name: str = "within frame"
     fullscreen: bool = True
     max_fps: float = 30.0
     width: int = 1280

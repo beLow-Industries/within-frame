@@ -1,5 +1,5 @@
 [project]
-name = "youarebeingwatched"
+name = "within-frame"
 version = "0.1.0"
 description = "Prototype software for a webcam/YOLO art installation."
 readme = "README.md"
@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-ybwatch = "youarebeingwatched.cli:main"
+wf = "within_frame.cli:main"
 
 [build-system]
 requires = ["hatchling"]

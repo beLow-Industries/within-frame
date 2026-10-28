@@ -77,7 +77,7 @@ class VideoSource:
             time.monotonic() - started,
         )
         if self._is_live_camera and self._is_open:
-            self._thread = threading.Thread(target=self._capture_loop, name=f"ybwatch-capture-{self.name}", daemon=True)
+            self._thread = threading.Thread(target=self._capture_loop, name=f"wf-capture-{self.name}", daemon=True)
             self._thread.start()
 
     @property

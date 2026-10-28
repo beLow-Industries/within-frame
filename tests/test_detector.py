@@ -4,8 +4,8 @@ import unittest
 
 import numpy as np
 
-from youarebeingwatched.detector import YoloDetector
-from youarebeingwatched.types import BinaryCropMask, UnmaskedCrop
+from within_frame.detector import YoloDetector
+from within_frame.types import BinaryCropMask, UnmaskedCrop
 
 
 class FakeBox:

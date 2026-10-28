@@ -8,9 +8,9 @@ from unittest.mock import patch
 
 import numpy as np
 
-from youarebeingwatched.config import AppConfig
-from youarebeingwatched.image import next_output_path, run_image
-from youarebeingwatched.types import Box, Detection
+from within_frame.config import AppConfig
+from within_frame.image import next_output_path, run_image
+from within_frame.types import Box, Detection
 
 
 class FakeDetector:
@@ -37,15 +37,15 @@ class ImageCommandTest(unittest.TestCase):
             self.assertEqual(next_output_path(root), root / "out-2.jpg")
 
     def test_unsupported_extension_returns_failure_without_detection(self) -> None:
-        with patch("youarebeingwatched.image.YoloDetector") as detector:
+        with patch("within_frame.image.YoloDetector") as detector:
             self.assertEqual(run_image(AppConfig(), source="photo.gif"), 1)
 
         detector.assert_not_called()
 
     def test_unreadable_image_returns_failure_without_detection(self) -> None:
         with (
-            patch("youarebeingwatched.image.cv2.imread", return_value=None),
-            patch("youarebeingwatched.image.YoloDetector") as detector,
+            patch("within_frame.image.cv2.imread", return_value=None),
+            patch("within_frame.image.YoloDetector") as detector,
         ):
             self.assertEqual(run_image(AppConfig(), source="missing.jpg"), 1)
 
@@ -62,10 +62,10 @@ class ImageCommandTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "out-0.jpg"
             with (
-                patch("youarebeingwatched.image.cv2.imread", return_value=np.zeros((600, 800, 3), dtype=np.uint8)),
-                patch("youarebeingwatched.image.cv2.imwrite", side_effect=imwrite),
-                patch("youarebeingwatched.image.next_output_path", return_value=output),
-                patch("youarebeingwatched.image.YoloDetector", FakeDetector),
+                patch("within_frame.image.cv2.imread", return_value=np.zeros((600, 800, 3), dtype=np.uint8)),
+                patch("within_frame.image.cv2.imwrite", side_effect=imwrite),
+                patch("within_frame.image.next_output_path", return_value=output),
+                patch("within_frame.image.YoloDetector", FakeDetector),
                 patch("sys.stdout", io.StringIO()),
             ):
                 self.assertEqual(run_image(AppConfig(), source="photo.JPG", threshold=0.7), 0)
@@ -78,9 +78,9 @@ class ImageCommandTest(unittest.TestCase):
 
     def test_write_failure_returns_failure(self) -> None:
         with (
-            patch("youarebeingwatched.image.cv2.imread", return_value=np.zeros((600, 800, 3), dtype=np.uint8)),
-            patch("youarebeingwatched.image.cv2.imwrite", return_value=False),
-            patch("youarebeingwatched.image.YoloDetector", FakeDetector),
+            patch("within_frame.image.cv2.imread", return_value=np.zeros((600, 800, 3), dtype=np.uint8)),
+            patch("within_frame.image.cv2.imwrite", return_value=False),
+            patch("within_frame.image.YoloDetector", FakeDetector),
             patch("sys.stdout", io.StringIO()),
         ):
             self.assertEqual(run_image(AppConfig(), source="photo.jpg"), 1)

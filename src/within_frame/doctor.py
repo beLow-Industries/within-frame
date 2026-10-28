@@ -135,7 +135,7 @@ def _v4l2_stream_probe(device: Path, config: SourcesConfig) -> tuple[bool, str]:
     if config.capture_fps is not None:
         stream_args.append(f"--set-parm={config.capture_fps}")
 
-    with tempfile.NamedTemporaryFile(prefix="ybwatch-", suffix=".raw") as frame_file:
+    with tempfile.NamedTemporaryFile(prefix="wf-", suffix=".raw") as frame_file:
         result = run_v4l2(
             device,
             *stream_args,

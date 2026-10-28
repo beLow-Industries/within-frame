@@ -4,8 +4,8 @@ import io
 import unittest
 from unittest.mock import patch
 
-from youarebeingwatched import cli
-from youarebeingwatched.config import (
+from within_frame import cli
+from within_frame.config import (
     AppConfig,
     DisplayConfig,
     ModelConfig,
@@ -13,7 +13,7 @@ from youarebeingwatched.config import (
     TrackingConfig,
     with_display_overrides,
 )
-from youarebeingwatched.v4l2 import CameraMode, select_camera_mode
+from within_frame.v4l2 import CameraMode, select_camera_mode
 
 
 class ConfigTest(unittest.TestCase):

@@ -5,9 +5,9 @@ from unittest.mock import patch
 
 import numpy as np
 
-from youarebeingwatched.config import DisplayConfig
-from youarebeingwatched.display import Display, LABEL_FONT, LABEL_THICKNESS, _cover_frame, _detection_label, _should_continue, draw_detections
-from youarebeingwatched.types import Box, Detection
+from within_frame.config import DisplayConfig
+from within_frame.display import Display, LABEL_FONT, LABEL_THICKNESS, _cover_frame, _detection_label, _should_continue, draw_detections
+from within_frame.types import Box, Detection
 
 
 class DisplayKeyboardTest(unittest.TestCase):
@@ -27,13 +27,13 @@ class DisplayCompositingTest(unittest.TestCase):
     def test_output_resolution_bypasses_screen_detection_and_sizes_rendered_frames(self) -> None:
         for fullscreen in (True, False):
             with self.subTest(fullscreen=fullscreen), \
-                patch("youarebeingwatched.display._assert_x_display_available"), \
-                patch("youarebeingwatched.display._screen_size", return_value=(3840, 1080)) as screen_size, \
-                patch("youarebeingwatched.display.cv2.namedWindow"), \
-                patch("youarebeingwatched.display.cv2.resizeWindow") as resize_window, \
-                patch("youarebeingwatched.display.cv2.setWindowProperty"), \
-                patch("youarebeingwatched.display.cv2.imshow") as imshow, \
-                patch("youarebeingwatched.display.cv2.waitKey", return_value=-1):
+                patch("within_frame.display._assert_x_display_available"), \
+                patch("within_frame.display._screen_size", return_value=(3840, 1080)) as screen_size, \
+                patch("within_frame.display.cv2.namedWindow"), \
+                patch("within_frame.display.cv2.resizeWindow") as resize_window, \
+                patch("within_frame.display.cv2.setWindowProperty"), \
+                patch("within_frame.display.cv2.imshow") as imshow, \
+                patch("within_frame.display.cv2.waitKey", return_value=-1):
                 display = Display(DisplayConfig(fullscreen=fullscreen, width=1920, height=1080, output_res=(1920, 1080)))
                 display.show(np.zeros((480, 640, 3), dtype=np.uint8), [], "test")
 
@@ -72,7 +72,7 @@ class DisplayCompositingTest(unittest.TestCase):
     def test_detection_label_uses_requested_font_style(self) -> None:
         frame = np.zeros((60, 120, 3), dtype=np.uint8)
 
-        with patch("youarebeingwatched.display.cv2.putText") as put_text:
+        with patch("within_frame.display.cv2.putText") as put_text:
             draw_detections(frame, [Detection("person", 0.9, Box(10, 30, 40, 50))], font_size=1.2)
 
         self.assertEqual(put_text.call_args.args[3], LABEL_FONT)

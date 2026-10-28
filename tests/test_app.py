@@ -5,10 +5,10 @@ from unittest.mock import patch
 
 import numpy as np
 
-from youarebeingwatched.app import _select_source
-from youarebeingwatched.config import AppConfig
-from youarebeingwatched.sources import SourceManager
-from youarebeingwatched.types import Box, Detection
+from within_frame.app import _select_source
+from within_frame.config import AppConfig
+from within_frame.sources import SourceManager
+from within_frame.types import Box, Detection
 
 
 class FakeSource:
@@ -44,7 +44,7 @@ class SourceSelectionTest(unittest.TestCase):
         source = FakeSource("camera:0")
         detector = FakeDetector([[Detection(class_name="dog", confidence=0.8, box=Box(1, 1, 5, 5))]])
 
-        with patch("youarebeingwatched.app.random.choice", return_value=source):
+        with patch("within_frame.app.random.choice", return_value=source):
             selected = _select_source(AppConfig(), detector, SourceManager([source]), None)
 
         self.assertIs(selected, source)

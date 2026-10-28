@@ -22,7 +22,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _run(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(prog="ybwatch")
+    parser = argparse.ArgumentParser(prog="wf")
     parser.add_argument("--source", action="append", help="OpenCV camera index or video/stream path. Can be repeated.")
     parser.add_argument("--mock", action="store_true", help="Use a generated mock source and synthetic detections.")
     parser.add_argument("--fullscreen", action="store_true", default=None, help="Force fullscreen output.")
@@ -41,7 +41,7 @@ def _run(argv: list[str]) -> int:
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument("--max-fps", action="store_true", help="Use the highest-FPS MJPG camera mode above the default minimum FPS.")
     mode_group.add_argument("--max-resolution", action="store_true", help="Use the largest MJPG camera mode, regardless of FPS.")
-    parser.add_argument("--log-level", default=os.environ.get("YBWATCH_LOG_LEVEL", "INFO"))
+    parser.add_argument("--log-level", default=os.environ.get("WF_LOG_LEVEL", "INFO"))
     args = parser.parse_args(argv)
 
     _configure_logging(args.log_level)
@@ -118,16 +118,16 @@ def _threshold(value: str) -> float:
 
 
 def _doctor(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(prog="ybwatch doctor")
+    parser = argparse.ArgumentParser(prog="wf doctor")
     parser.add_argument("--scan-max", type=int, default=10)
-    parser.add_argument("--log-level", default=os.environ.get("YBWATCH_LOG_LEVEL", "INFO"))
+    parser.add_argument("--log-level", default=os.environ.get("WF_LOG_LEVEL", "INFO"))
     args = parser.parse_args(argv)
     _configure_logging(args.log_level)
     return run_doctor(args.scan_max)
 
 
 def _image(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(prog="ybwatch image")
+    parser = argparse.ArgumentParser(prog="wf image")
     parser.add_argument("--source", required=True, help="JPG or PNG image path.")
     parser.add_argument("--segmentation", action="store_true", help="Use YOLO segmentation masks to black out crop backgrounds.")
     parser.add_argument("--threshold", type=_threshold, default=None, help="Detection confidence threshold (default: 0.4).")
@@ -135,7 +135,7 @@ def _image(argv: list[str]) -> int:
     parser.add_argument("--font-size", type=_positive_float, default=0.65, help="Detection box label font scale.")
     parser.add_argument("--margin", type=_nonnegative_int, default=0, help="Add source pixels around each crop.")
     parser.add_argument("--do-not-track", action="store_true", help="Save the full source image with detection boxes.")
-    parser.add_argument("--log-level", default=os.environ.get("YBWATCH_LOG_LEVEL", "INFO"))
+    parser.add_argument("--log-level", default=os.environ.get("WF_LOG_LEVEL", "INFO"))
     args = parser.parse_args(argv)
     _configure_logging(args.log_level)
     return run_image(
